@@ -20,8 +20,9 @@ if __name__ == "__main__":
    print "Case: "+ case + ", " + "Fold: " + order + ", " + "Layers: " + str(layer) + ", " + "Units: " + str(unit)
    print
 
-   run_network.run_network(unit,layer)
-   sys.exit()
+   run_network.run_network(unit,layer,stateful = True)
+
+   #sys.exit()
    #case = str(sys.argv[1])
    #order = str(sys.argv[2])
 

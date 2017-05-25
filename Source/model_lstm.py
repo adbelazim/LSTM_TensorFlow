@@ -37,7 +37,7 @@ def init_model_lstm_stateful(units,layers):
 	      stateful=True))
   
 
-   model.add(LSTM(units/2,batch_input_shape=(nn_config['batch_size'],nn_config['time_steps'],nn_config['input_dim']),
+   model.add(LSTM(units,batch_input_shape=(nn_config['batch_size'],nn_config['time_steps'],nn_config['input_dim']),
 	      activation = nn_config['activation_function'],
         go_backwards = nn_config['go_backwards'],
         recurrent_activation = nn_config['recurrent_activation'], 
@@ -75,7 +75,7 @@ def init_model_lstm(units,layers):
    return_sequences = True
    for _ in range(layers):
         print(_)
-        if _ == nn_config['layers'] - 1:
+        if _ == layers - 1:
           return_sequences = False
         model.add(LSTM(units,input_shape=(nn_config['time_steps'],nn_config['input_dim']),
         #model.add(LSTM(nn_config['units'],input_shape=(nn_config['input_dim'],nn_config['time_steps']),

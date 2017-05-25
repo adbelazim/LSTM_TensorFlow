@@ -26,8 +26,8 @@ def get_compiler_config():
    return compiler_config
 
 def get_fit_config():
-   fit_config = {'epochs' : 5,
-   				'batch_size' : 26}
+   fit_config = {'epochs' : 100,
+   				'batch_size' : 3}
    return fit_config
 
 #Activation functions: 'sigmoid', 'linear', 'tanh', 'hard_sigmoid'
@@ -38,12 +38,12 @@ def get_nn_config():
 				'kernel_initializer' : 'glorot_uniform',
 				'recurrent_initializer' :'orthogonal', 
 				'input_dim' : 1,
-				'time_steps' : 48,
-				'batch_size' : 26,
+				'time_steps' : 25,
+				'batch_size' : 3,
 				'dropout' : 0,
 				'recurrent_dropout' : 0,
 				'use_bias' : True,
-				'unit_forget' : False,
+				'unit_forget' : True,
 				'go_backwards' : False,
 				'units' : 48,
 				'output' : 1,
@@ -74,16 +74,19 @@ def get_files_save(units,layers):
 	case = str(sys.argv[1])
 	order = str(sys.argv[2])
 	nn_config = get_nn_config()
-	path_dir = "/Users/cristobal/Documents/Tesis/Codigo/Neural_LSTM/Checkpoint/"
+	path_dir = "/Users/cristobal/Documents/Tesis/Codigo/Neural_LSTM/Checkpoint/StatefulForget/"
 	improvements = "weights-improvement-{epoch:02d}-{val_loss:.2f}.hdf5"
 
 	layer = str(layers)
 	units = str(units)
 	#dir_save se utiliza para crear el directorio a guardar los pesos
+	path_dir = path_dir +str(nn_config['time_steps']) + "_time_steps" + "/"
 	dir_save = path_dir + case + "/" + layer +"_layer"+ "/" + units + "_units"  + "/" + order + "_fold"
 	weights_dir = dir_save + "/" + "weights"
 	dir_tensor_board =  dir_save + "/" + "tensor_log"
 	dir_weights_image = dir_save + "/" + "heat_images"
+	dir_dimensionality_reduction = dir_save + "/" + "dimensionality_reduction"
+
 	if not os.path.exists(dir_save):
 		os.makedirs(dir_save)
 	if not os.path.exists(weights_dir):
@@ -92,25 +95,51 @@ def get_files_save(units,layers):
 		os.makedirs(dir_tensor_board)
 	if not os.path.exists(dir_weights_image):
 		os.makedirs(dir_weights_image)
+	if not os.path.exists(dir_dimensionality_reduction):
+		os.makedirs(dir_dimensionality_reduction)
 
 	filepath = dir_save + "/" +"weights/"+ improvements
 	file_csv = dir_save + "/" + "training_log.csv"
 	file_tensor_board = dir_save + "/" + "tensor_log"
 	file_weights = dir_save + "/" + "weights/" + "final_weights.hdf5"
+	file_txt = dir_save + "/" + "model.txt"
 
 	files_save = { 'file_save' : dir_save,
+					'file_txt' : file_txt,
 					'filepath' : filepath,
 					'file_csv' : file_csv,
 					'file_weights' : file_weights,
 					'file_tensor_board' : file_tensor_board,
 					'dir_weights_image' : dir_weights_image,
-					'period' : 10
+					'dir_dimensionality_reduction' : dir_dimensionality_reduction,
+					'period' : 100
 
 	}
 	return files_save
 
 
+def get_iterables():
+	cases = {'19' : '19',
+		'55' : '55',
+		'91' : '91'}
+	layers = {'1_layer' : '1_layer',
+			'2_layer' : '2_layer'}
 
+	cells = {'1_units' : '1_units',
+		'2_units' : '2_units',
+		'4_units' : '4_units',
+		'8_units' : '8_units',
+		'16_units' : '16_units',
+		'24_units' : '24_units',
+		'32_units' : '32_units',
+		'40_units' : '40_units',
+		'48_units' : '48_units'
+		}
+
+	folds = {'1_fold' : '1_fold',
+		'2_fold' : '2_fold'}
+
+	return cases, layers, cells, folds
 
 
 

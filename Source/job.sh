@@ -1,13 +1,22 @@
 #!/bin/sh
-python two_recurrent_layers.py 55 1 1 2
 
-for i in 1 2 3
+#Files
+
+for file in 19 55 91
 do
-    for j in 1 2 4 8 16 24 32 40 48
-    do
-        for k in 1 2
-        do
-            python two_recurrent_layers.py 55 $k $i $j
-        done 
-    done
+   #layer
+   for i in 1 2 
+   do
+      #units
+      for j in 1 2 4 8 16 24 32 40 48
+      do
+         #folds
+         for k in 1 2
+         do
+            python two_recurrent_layers.py $file $k $i $j
+         done 
+      done
+   done
 done
+
+

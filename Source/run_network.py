@@ -44,7 +44,7 @@ def run_network(units, layers, stateful = False):
    	print "Corr_train: " + str(corr_train[0,1]) + " " + "Corr_test: " + str(corr_test[0,1])
 
    	save.save_model(model,units,layers)
-
+   	save.save_txt(corr_train,corr_test,units,layers)
    	save.plot_model_predictions(trainPredict,trainY,testPredict,testY,corr_train,corr_test,units,layers)
 
 
