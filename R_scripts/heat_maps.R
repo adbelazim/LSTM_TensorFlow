@@ -174,11 +174,11 @@ save_heat_maps_1layer <- function(path_weights,
     file_dense = paste(titulo_dense,'.png',sep="")
     
     #Primera capa
-    (ggplot(lstm_kernel_melted, aes(x = Gates, y = Units, fill = weights)) + ggtitle(titulo_lstm) + scale_fill_gradientn(limits = c(ranges$min_kernel,ranges$max_kernel), colours = c("blue", "white", "red"),breaks = c(ranges$min_kernel,0,ranges$max_kernel),labels=format(c(ranges$min_kernel,0,ranges$max_kernel))) + geom_tile())
+    (ggplot(lstm_kernel_melted, aes(x = Gates, y = Units, fill = weights)) + ggtitle(titulo_lstm) + scale_fill_gradientn(limits = c(ranges$min_kernel,ranges$max_kernel), colours = c("black", "white", "green"),breaks = c(ranges$min_kernel,0,ranges$max_kernel),labels=format(c(ranges$min_kernel,0,ranges$max_kernel))) + geom_tile())
     ggsave(file = file_lstm,path=path_save)
-    (ggplot(lstm_recurrent_kernel_melted, aes(x = Gates, y = Units, fill = weights)) + ggtitle(titulo_lstm_recurrent) + scale_fill_gradientn(limits = c(ranges$min_recurrent_kernel,ranges$max_recurrent_kernel), colours = c("blue", "white", "red"),breaks = c(ranges$min_recurrent_kernel,0,ranges$max_recurrent_kernel),labels=format(c(ranges$min_recurrent_kernel,0,ranges$max_recurrent_kernel))) + geom_tile())
+    (ggplot(lstm_recurrent_kernel_melted, aes(x = Gates, y = Units, fill = weights)) + ggtitle(titulo_lstm_recurrent) + scale_fill_gradientn(limits = c(ranges$min_recurrent_kernel,ranges$max_recurrent_kernel), colours = c("black", "white", "green"),breaks = c(ranges$min_recurrent_kernel,0,ranges$max_recurrent_kernel),labels=format(c(ranges$min_recurrent_kernel,0,ranges$max_recurrent_kernel))) + geom_tile())
     ggsave(file = file_lstm_recurrent,path=path_save)
-    (ggplot(dense_melted, aes(x = Output, y = Units, fill = weights)) + ggtitle(titulo_dense)+ scale_fill_gradientn(limits = c(ranges$min_dense,ranges$max_dense), colours = c("blue", "white", "red"),breaks = c(ranges$min_dense,0,ranges$max_dense),labels=format(c(ranges$min_dense,0,ranges$max_dense))) + geom_tile())
+    (ggplot(dense_melted, aes(x = Output, y = Units, fill = weights)) + ggtitle(titulo_dense)+ scale_fill_gradientn(limits = c(ranges$min_dense,ranges$max_dense), colours = c("black", "white", "green"),breaks = c(ranges$min_dense,0,ranges$max_dense),labels=format(c(ranges$min_dense,0,ranges$max_dense))) + geom_tile())
     ggsave(file = file_dense,path=path_save)
     
     i=i+period
@@ -229,17 +229,17 @@ save_heat_maps_2layer <- function(path_weights,
     file_dense = paste(titulo_dense,'.png',sep="")
   
     #Primera capa
-    (ggplot(lstm_kernel_melted, aes(x = Gates, y = Units, fill = weights)) + ggtitle(titulo_lstm) + scale_fill_gradientn(limits = c(ranges$min_kernel,ranges$max_kernel),colours = c("blue", "white", "red"),breaks = c(ranges$min_kernel,0,ranges$max_kernel),labels=format(c(ranges$min_kernel,0,ranges$max_kernel))) + geom_tile())
+    (ggplot(lstm_kernel_melted, aes(x = Gates, y = Units, fill = weights)) + ggtitle(titulo_lstm) + scale_fill_gradientn(limits = c(ranges$min_kernel,ranges$max_kernel),colours = c("black", "white", "green"),breaks = c(ranges$min_kernel,0,ranges$max_kernel),labels=format(c(ranges$min_kernel,0,ranges$max_kernel))) + geom_tile())
     ggsave(file = file_lstm,path=path_save)
-    (ggplot(lstm_recurrent_kernel_melted, aes(x = Gates, y = Units, fill = weights)) + ggtitle(titulo_lstm_recurrent) + scale_fill_gradientn(limits = c(ranges$min_recurrent_kernel,ranges$max_recurrent_kernel), colours = c("blue", "white", "red"),breaks = c(ranges$min_recurrent_kernel,0,ranges$max_recurrent_kernel),labels=format(c(ranges$min_recurrent_kernel,0,ranges$max_recurrent_kernel))) + geom_tile())
+    (ggplot(lstm_recurrent_kernel_melted, aes(x = Gates, y = Units, fill = weights)) + ggtitle(titulo_lstm_recurrent) + scale_fill_gradientn(limits = c(ranges$min_recurrent_kernel,ranges$max_recurrent_kernel), colours = c("black", "white", "green"),breaks = c(ranges$min_recurrent_kernel,0,ranges$max_recurrent_kernel),labels=format(c(ranges$min_recurrent_kernel,0,ranges$max_recurrent_kernel))) + geom_tile())
     ggsave(file = file_lstm_recurrent,path=path_save)
-    
+    print("llegue")
     #Segunda capa
-    (ggplot(lstm_kernel_melted_2, aes(x = Gates, y = Units,fill=weights)) + ggtitle(titulo_lstm_2) +  scale_fill_gradientn(limits = c(ranges$min_kernel2,ranges$max_kernel2), colours = c("blue", "white", "red"),breaks = c(ranges$min_kernel2,0,ranges$max_kernel2),labels=format(c(ranges$min_kernel2,0,ranges$max_kernel2))) + geom_tile())
+    (ggplot(lstm_kernel_melted_2, aes(x = Gates, y = Units,fill=weights)) + ggtitle(titulo_lstm_2) +  scale_fill_gradientn(limits = c(ranges$min_kernel2,ranges$max_kernel2), colours = c("black", "white", "green"),breaks = c(ranges$min_kernel2,0,ranges$max_kernel2),labels=format(c(ranges$min_kernel2,0,ranges$max_kernel2))) + geom_tile())
     ggsave(file = file_lstm_2,path=path_save)
-    (ggplot(lstm_recurrent_kernel_melted_2, aes(x = Gates, y = Units, fill = weights)) + ggtitle(titulo_lstm_recurrent_2)+ scale_fill_gradientn(limits = c(ranges$min_recurrent_kernel2,ranges$max_recurrent_kernel2), colours = c("blue", "white", "red"),breaks = c(ranges$min_recurrent_kernel2,0,ranges$max_recurrent_kernel2),labels=format(c(ranges$min_recurrent_kernel2,0,ranges$max_recurrent_kernel2))) + geom_tile())
+    (ggplot(lstm_recurrent_kernel_melted_2, aes(x = Gates, y = Units, fill = weights)) + ggtitle(titulo_lstm_recurrent_2)+ scale_fill_gradientn(limits = c(ranges$min_recurrent_kernel2,ranges$max_recurrent_kernel2), colours = c("black", "white", "green"),breaks = c(ranges$min_recurrent_kernel2,0,ranges$max_recurrent_kernel2),labels=format(c(ranges$min_recurrent_kernel2,0,ranges$max_recurrent_kernel2))) + geom_tile())
     ggsave(file = file_lstm_recurrent_2,path=path_save)
-    (ggplot(dense_melted, aes(x = Output, y = Units, fill = weights)) + ggtitle(titulo_dense) +scale_fill_gradientn(limits = c(ranges$min_dense,ranges$max_dense), colours = c("blue", "white", "red"),breaks = c(ranges$min_dense,0,ranges$max_dense),labels=format(c(ranges$min_dense,0,ranges$max_dense))) + geom_tile())
+    (ggplot(dense_melted, aes(x = Output, y = Units, fill = weights)) + ggtitle(titulo_dense) +scale_fill_gradientn(limits = c(ranges$min_dense,ranges$max_dense), colours = c("black", "white", "green"),breaks = c(ranges$min_dense,0,ranges$max_dense),labels=format(c(ranges$min_dense,0,ranges$max_dense))) + geom_tile())
     ggsave(file = file_dense,path=path_save)
     
     i=i+period
@@ -249,16 +249,16 @@ save_heat_maps_2layer <- function(path_weights,
 
 ##Path weights example /Users/cristobal/Documents/Tesis/Codigo/Neural_LSTM/Checkpoint/19/1_layer/1_units/1_fold/weights
 
-path_dir <- "/Users/cristobal/Documents/Tesis/Codigo/Neural_LSTM/Checkpoint/Forget/16_time_steps/"
-#cases <- c("19","55","91")
+path_dir <- "/Users/cristobal/Documents/Tesis/Codigo/Neural_LSTM/Checkpoint/Stateless/25_time_steps/"
+#cases <- c("11","55","91")
 #layers <- c("1_layer","2_layer")
 #cells <- c("1_units","2_units","4_units","8_units","16_units","24_units","32_units","40_units","48_units")
 #folds <- c("1_fold","2_fold")
 
-cases <- c("19","55","91")
-layers <- c("2_layer")
-cells <- c("4_units")
-folds <- c("1_fold")
+cases <- c("11","99")
+layers <- c("1_layer","2_layer")
+cells <- c("2_units","4_units","8_units")
+folds <- c("1_fold","2_fold")
 ranges_1layer <- list()
 ranges_2layer <- list()
 for (case in cases){
