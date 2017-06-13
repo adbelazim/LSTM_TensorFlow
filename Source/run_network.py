@@ -4,6 +4,7 @@ import model_lstm as m_lstm
 import metrics
 import save_model as save
 import config as cfg
+import step_test
 from keras.utils import plot_model
 
 
@@ -15,7 +16,8 @@ from keras.utils import plot_model
 def run_network(units, layers, stateful = False):
 
 	#Se cargan los datos de entrenamiento y test
-	trainX, testX, trainY, testY, scaler = dt.train_test_data(reshape_option = 1)
+	trainX, testX, trainY, testY, scaler_cbfv, scaler_abp = dt.train_test_data(reshape_option = 1)
+	print(trainX.shape)
 	#Se compila el modelo
 	model = m_lstm.init_model_lstm(units,layers) 
 	#Se entrena el modelo
@@ -32,11 +34,28 @@ def run_network(units, layers, stateful = False):
    		trainPredict = model.predict(trainX,batch_size=fit_config['batch_size'])
    		testPredict = model.predict(testX,batch_size=fit_config['batch_size'])
 
+
+   	#Values for step test
+   	sampling_time = 0.4
+   	time = trainX.shape[0]*0.4
+   	time_after = time*0.7
+   	time_until = time - time_after
+
+   	step = step_test.generate_step(sampling_time = sampling_time, 
+   							time_until_release=time_until ,
+   							time_after_release = time_after, 
+   							smoth_step_stimulus = True)
+   	step_prediction = step_test.step_test(model,step)
+   	step_test.plot_step_test(step_prediction,units,layers,'step_test_normalize.png')
+   	step_prediction = scaler_cbfv.inverse_transform(step_prediction)
+   	step_test.plot_step_test(step_prediction,units,layers,'step_test.png')
+
+   	
 	#Se obtiene el valor no normalizado de las predicciones. Ivert predictions
-   	trainPredict = scaler.inverse_transform(trainPredict)
-   	trainY = scaler.inverse_transform([trainY])
-   	testPredict = scaler.inverse_transform(testPredict)
-   	testY = scaler.inverse_transform([testY])
+   	trainPredict = scaler_cbfv.inverse_transform(trainPredict)
+   	trainY = scaler_cbfv.inverse_transform([trainY])
+   	testPredict = scaler_cbfv.inverse_transform(testPredict)
+   	testY = scaler_cbfv.inverse_transform([testY])
 
    	#Se calcula la correlacion
    	corr_train, corr_test = metrics.correlations(trainPredict,trainY,testPredict,testY)

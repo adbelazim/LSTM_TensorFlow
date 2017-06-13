@@ -1,6 +1,8 @@
 import sys
 import os
+from keras import initializers
 
+seed_value = 997
 #Este puede ser, 'adam', 'sgd', 'rmsprop', adadelta, adamax, nadam, TFOptimizer
 #optimizer='rmsprop'
 def get_optimizer_config():
@@ -26,17 +28,19 @@ def get_compiler_config():
    return compiler_config
 
 def get_fit_config():
-   fit_config = {'epochs' : 100,
+   fit_config = {'epochs' : 200,
    				'batch_size' : 3}
    return fit_config
 
 #Activation functions: 'sigmoid', 'linear', 'tanh', 'hard_sigmoid'
 #Kernel_initializer: uniform, VarianceScaling, TruncatedNormal, Orthogonal, lecun_uniform, glorot_normal, glorot_uniform
 def get_nn_config():
+	kernel_initializer = initializers.glorot_uniform(seed=seed_value)
+	recurrent_initializer = initializers.orthogonal(seed=seed_value)
 	nn_config = {'activation_function' : 'tanh',
 				'recurrent_activation' : 'hard_sigmoid',
-				'kernel_initializer' : 'glorot_uniform',
-				'recurrent_initializer' :'orthogonal', 
+				'kernel_initializer' : kernel_initializer,
+				'recurrent_initializer' :recurrent_initializer, 
 				'input_dim' : 1,
 				'time_steps' : 25,
 				'batch_size' : 3,
@@ -74,7 +78,11 @@ def get_files_save(units,layers):
 	case = str(sys.argv[1])
 	order = str(sys.argv[2])
 	nn_config = get_nn_config()
-	path_dir = "/Users/cristobal/Documents/Tesis/Codigo/Neural_LSTM/Checkpoint/StatefulForget/"
+	path = os.getcwd()
+	path, last_dir  = os.path.split(path)
+	path = path + "/Checkpoint"
+
+	path_dir = path + "/Stateless/"
 	improvements = "weights-improvement-{epoch:02d}-{val_loss:.2f}.hdf5"
 
 	layer = str(layers)

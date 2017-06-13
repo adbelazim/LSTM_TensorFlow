@@ -49,7 +49,7 @@ def train_test_data(reshape_option = 1):
    time_test,cbfv_test,abp_test = np.split(data_test,3,axis = 1)
    cbfv_test = np.asarray(cbfv_test, dtype=np.float64)
    abp_test = np.asarray(abp_test, dtype=np.float64)
-   
+
    #se aplica interpolacion lineal a los datos
    cbfv_train = lineal_interpolation(cbfv_train)
    abp_train = lineal_interpolation(abp_train)
@@ -59,11 +59,13 @@ def train_test_data(reshape_option = 1):
 
    #Se normalizan los datos para facilitar la convergencia del gradiente
    # normalize the dataset
-   scaler = MinMaxScaler(feature_range=(0, 1))
-   abp_train = scaler.fit_transform(abp_train)
-   abp_test = scaler.fit_transform(abp_test)
-   cbfv_train = scaler.fit_transform(cbfv_train)
-   cbfv_test = scaler.fit_transform(cbfv_test)
+   scaler_cbfv = MinMaxScaler(feature_range=(0, 1))
+   cbfv_train = scaler_cbfv.fit_transform(cbfv_train)
+   cbfv_test = scaler_cbfv.fit_transform(cbfv_test)
+   scaler_abp = MinMaxScaler(feature_range=(0, 1))
+   abp_train = scaler_abp.fit_transform(abp_train)
+   abp_test = scaler_abp.fit_transform(abp_test)
+   
 
    # reshape into X=t and Y=t+1
    trainX = create_timesteps(abp_train, nn_config['time_steps'])
@@ -81,7 +83,7 @@ def train_test_data(reshape_option = 1):
       trainX = np.reshape(trainX, (trainX.shape[0], nn_config['input_dim'], nn_config['time_steps']))
       testX = np.reshape(testX, (testX.shape[0], nn_config['input_dim'], nn_config['time_steps']))
 
-   return trainX, testX, trainY, testY, scaler
+   return trainX, testX, trainY, testY, scaler_cbfv, scaler_abp
    
 
    
