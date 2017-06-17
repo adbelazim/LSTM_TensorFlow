@@ -6,6 +6,7 @@ from keras import regularizers
 
 #from keras.layers import Bidirectional
 import config as cfg
+import config_keras as cfg_keras
 import metrics
 import time
 
@@ -15,7 +16,7 @@ from tensorflow.contrib.metrics.python.ops.metric_ops import streaming_pearson_c
 
 def init_model_lstm_stateful(units,layers):
 
-   nn_config = cfg.get_nn_config()
+   nn_config = cfg_keras.get_nn_config()
    regularizer_config = cfg.get_regularizer_config()
 
    #Se deberia llamar algun archivo de configuracion con los parametros de la funcion para no recibirlos de entrada
@@ -68,7 +69,7 @@ def init_model_lstm_stateful(units,layers):
 
 def init_model_lstm(units,layers):
 
-   nn_config = cfg.get_nn_config()
+   nn_config = cfg_keras.get_nn_config()
    regularizer_config = cfg.get_regularizer_config()
 
    model = Sequential()  

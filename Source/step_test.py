@@ -3,6 +3,7 @@ from scipy import signal
 import matplotlib.pyplot as plt
 from data import create_timesteps
 import config as cfg
+import config_keras as cfg_keras
 
 def generate_step(sampling_time = 0.2, 
                 left_stabilisation_time = 30,
@@ -60,7 +61,7 @@ def plot_step_test(prediction,units,layers,name):
     plt.savefig(files_save['file_save'] + "/" +name)  
 
 def step_test(model,step):
-    nn_config = cfg.get_nn_config()
+    nn_config = cfg_keras.get_nn_config()
     step = np.reshape(step, (len(step),1))
     step = create_timesteps(step,nn_config['time_steps'])
     step = np.reshape(step,(step.shape[0],nn_config['time_steps'], nn_config['input_dim']))
