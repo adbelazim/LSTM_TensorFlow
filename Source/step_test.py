@@ -26,11 +26,6 @@ def generate_step(sampling_time = 0.2,
 
     samples_total = samples_left + samples_after_release
 
-    print(int(samples_stabilisation))
-    print(samples_after_release)
-    print(samples_until_release)
-    print(samples_left)
-
     #unos antes de la caida
     left_escalon = np.arange(samples_left)
     left_escalon = np.ones_like(left_escalon)
@@ -51,8 +46,9 @@ def generate_step(sampling_time = 0.2,
 
     return np.asarray(escalon)
 
-def plot_step_test(prediction,units,layers,name):
-    files_save = cfg.get_files_save(units,layers)
+def plot_step_test(prediction,units,layers,case,order,name):
+    nn_config = cfg_keras.get_nn_config()
+    files_save = cfg.get_files_save(units,layers,case,order,nn_config)
     plt.figure(1)
     plt.title("Step test")
     plt.plot(prediction, 'b')

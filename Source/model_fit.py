@@ -1,7 +1,8 @@
 from keras.models import Sequential
 
 import matplotlib.pyplot as plt
-import numpy
+import numpy as np
+np.random.seed(997)
 
 from keras.callbacks import ModelCheckpoint
 from keras.callbacks import ReduceLROnPlateau
@@ -13,12 +14,15 @@ from keras.callbacks import TensorBoard
 
 import callbacks_model as callb
 import config as cfg
+import config_keras as cfg_keras
 
 
 
 # callbacks uses for fit de model 
-def model_fit_callbacks(units,layers):
-	files_save = cfg.get_files_save(units,layers)
+def model_fit_callbacks(units,layers,case,order):
+
+	nn_config = cfg_keras.get_nn_config()
+	files_save = cfg.get_files_save(units,layers,case,order,nn_config)
 
 	checkpointer = ModelCheckpoint(filepath=files_save['filepath'], 
 									verbose=1, 
@@ -44,23 +48,23 @@ def model_fit_callbacks(units,layers):
 	return [checkpointer,reduce_lr,early_stoping,loss_history,fit_history,csv_logger,tensor_board]
 
 
-def model_fit(model,trainX, trainY, testX, testY,units,layers,stateful = False):
+def model_fit(model,trainX, trainY, testX, testY,units,layers,case,order,stateful = False):
 
 	fit_config = cfg.get_fit_config()
-	callbacks = model_fit_callbacks(units,layers)
+	callbacks = model_fit_callbacks(units,layers,case,order)
 
 	if stateful:
 		model.fit(trainX, trainY, 
 			epochs=fit_config['epochs'], 
 			batch_size=fit_config['batch_size'], 
-			verbose=2,
+			verbose=0,
 			validation_data=(testX,testY), 
 			callbacks=callbacks,
 			shuffle=False)
 	else:
 		model.fit(trainX, trainY, 
 			epochs=fit_config['epochs'], 
-			verbose=2,
+			verbose=0,
 			validation_data=(testX,testY), 
 			callbacks=callbacks)
 		#print(callbacks[3].losses)

@@ -1,5 +1,6 @@
+import numpy as np
+np.random.seed(997)
 from keras import initializers
-
 seed_value = 997
 
 
@@ -11,7 +12,7 @@ def get_nn_config():
 				'kernel_initializer' : kernel_initializer,
 				'recurrent_initializer' :recurrent_initializer, 
 				'input_dim' : 1,
-				'time_steps' : 25,
+				'time_steps' : 10,
 				'batch_size' : 3,
 				'dropout' : 0,
 				'recurrent_dropout' : 0,

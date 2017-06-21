@@ -1,3 +1,6 @@
+import numpy as np
+np.random.seed(997)
+
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM

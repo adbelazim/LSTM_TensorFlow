@@ -1,10 +1,11 @@
 from keras.utils import plot_model
 import config as cfg
 import matplotlib.pyplot as plt
+import config_keras as cfg_keras
 
-
-def save_model(model,units,layers):
-   files_save = cfg.get_files_save(units,layers)
+def save_model(model,units,layers,case,order):
+   nn_config = cfg_keras.get_nn_config()
+   files_save = cfg.get_files_save(units,layers,case,order,nn_config)
    path_model = files_save['file_save'] + "/"
    path_model = path_model + "model.png"
 
@@ -24,44 +25,46 @@ def save_model(model,units,layers):
    model_json.write(str(json_string))
    model_json.close()
 
-def save_txt(corr_train,corr_test,units,layers):
-      model_correlation = str(corr_train[0,1]) + " " + str(corr_test[0,1])
-      model_units_layers = "Layers: " + str(layers) + " "+ "Units: " + str(units)
+def save_txt(corr_train,corr_test,units,layers,case,order):
+   model_correlation = str(corr_train[0,1]) + " " + str(corr_test[0,1])
+   model_units_layers = "Layers: " + str(layers) + " "+ "Units: " + str(units)
 
-      files_save = cfg.get_files_save(units,layers)
-      path_txt = files_save['file_txt']
-      model_txt = open(path_txt,'w')
-      model_txt.write(model_correlation)
-      model_txt.write("\n")
-      model_txt.write(model_units_layers)
-      model_txt.close()
+   nn_config = cfg_keras.get_nn_config()
+   files_save = cfg.get_files_save(units,layers,case,order,nn_config)
+   path_txt = files_save['file_txt']
+
+   model_txt = open(path_txt,'w')
+   model_txt.write(model_correlation)
+   model_txt.write("\n")
+   model_txt.write(model_units_layers)
+   model_txt.close()
 
 
-def plot_model_predictions(trainPredict,trainY,testPredict,testY,corr_train,corr_test,units,layers):
+def plot_model_predictions(trainPredict,trainY,testPredict,testY,corr_train,corr_test,units,layers,case,order):
    ##PLOTS del modelo
+   nn_config = cfg_keras.get_nn_config()
+   files_save = cfg.get_files_save(units,layers,case,order,nn_config)
 
-   	files_save = cfg.get_files_save(units,layers)
-   	
-   	title1 = repr(corr_train[0,1]) 
-   	title1 = 'train ' + title1  
-   	title2 = repr(corr_test[0,1])
-   	title2 = 'test ' + title2  
+   title1 = repr(corr_train[0,1]) 
+   title1 = 'train ' + title1  
+   title2 = repr(corr_test[0,1])
+   title2 = 'test ' + title2  
 
-   	plt.figure(2)
-   	plt.subplot(111)
-   	plt.title(title1)
-   	plt.plot(trainY[0,:], 'r', trainPredict[:,0], 'b')
-   	plt.ylabel("CBFV")
-   	plt.xlabel("Time")
-   	plt.savefig(files_save['file_save'] + "/" +'trainPredict.png')
+   plt.figure(2)
+   plt.subplot(111)
+   plt.title(title1)
+   plt.plot(trainY[0,:], 'r', trainPredict[:,0], 'b')
+   plt.ylabel("CBFV")
+   plt.xlabel("Time")
+   plt.savefig(files_save['file_save'] + "/" +'trainPredict.png')
 
-   	plt.figure(3)
-   	plt.subplot(111)
-   	plt.title(title2)
-   	plt.plot(testY[0,:], 'r', testPredict[:,0], 'b')
-   	plt.ylabel("CBFV")
-   	plt.xlabel("Time")
-   	plt.savefig(files_save['file_save'] + "/" +'testPredict.png')  
+   plt.figure(3)
+   plt.subplot(111)
+   plt.title(title2)
+   plt.plot(testY[0,:], 'r', testPredict[:,0], 'b')
+   plt.ylabel("CBFV")
+   plt.xlabel("Time")
+   plt.savefig(files_save['file_save'] + "/" +'testPredict.png')  
 
 
 

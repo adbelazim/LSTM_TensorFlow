@@ -4,8 +4,8 @@ import config as cfg
 import config_keras as cfg_keras
 from data_utils import lectura, lineal_interpolation, create_timesteps
 
-def train_test_data(reshape_option = 1):
-   files_config = cfg.get_files_config()
+def train_test_data(case,order,reshape_option = 1):
+   files_config = cfg.get_files_config(case,order)
    nn_config = cfg_keras.get_nn_config()
 # Lectura de datos de entrenamiento
    data_train = lectura(files_config['filename_train'])
