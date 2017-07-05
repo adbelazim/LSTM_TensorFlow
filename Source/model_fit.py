@@ -19,10 +19,10 @@ import config_keras as cfg_keras
 
 
 # callbacks uses for fit de model 
-def model_fit_callbacks(units,layers,case,order):
+def model_fit_callbacks(subject,units,layers,case,order):
 
 	nn_config = cfg_keras.get_nn_config()
-	files_save = cfg.get_files_save(units,layers,case,order,nn_config)
+	files_save = cfg.get_files_save(subject,units,layers,case,order,nn_config)
 
 	checkpointer = ModelCheckpoint(filepath=files_save['filepath'], 
 									verbose=1, 
@@ -48,10 +48,10 @@ def model_fit_callbacks(units,layers,case,order):
 	return [checkpointer,reduce_lr,early_stoping,loss_history,fit_history,csv_logger,tensor_board]
 
 
-def model_fit(model,trainX, trainY, testX, testY,units,layers,case,order,stateful = False):
+def model_fit(model,trainX, trainY, testX, testY,subject,units,layers,case,order,stateful = False):
 
 	fit_config = cfg.get_fit_config()
-	callbacks = model_fit_callbacks(units,layers,case,order)
+	callbacks = model_fit_callbacks(subject,units,layers,case,order)
 
 	if stateful:
 		model.fit(trainX, trainY, 
@@ -69,8 +69,6 @@ def model_fit(model,trainX, trainY, testX, testY,units,layers,case,order,statefu
 			callbacks=callbacks)
 		#print(callbacks[3].losses)
 
-
-#	return model_fit
 
 
 

@@ -78,7 +78,6 @@ def init_model_lstm(units,layers):
    model = Sequential()  
    return_sequences = True
    for _ in range(layers):
-        print(_)
         if _ == layers - 1:
           return_sequences = False
         model.add(LSTM(units,input_shape=(nn_config['time_steps'],nn_config['input_dim']),

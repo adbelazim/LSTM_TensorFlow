@@ -6,14 +6,15 @@ import save_model as save
 import config as cfg
 import step_test
 from keras.utils import plot_model
-from mds_visualization import collapse_layer_2gates,collapse_layer_3gates
+from mds_visualization import collapse_layer,collapse_layer_2gates,collapse_layer_3gates
 
 #TO DO
 #import model_lstm_cnn as m_lstm_cnn
 #import model_cnn as m_cnn
 #import model_distributed as m_dist
 
-def run_network(units, 
+def run_network(subject,
+				units, 
 				layers, 
 				case, 
 				order, 
@@ -23,32 +24,20 @@ def run_network(units,
 				collapse_matrix_3gates,
 				collapse_matrix_3gates_flat,
 				collapse_matrix_3gates_mg,
-				label_matrix, stateful = False):
+				collapse_matrix_4gates,
+				collapse_matrix_4gates_flat,
+				collapse_matrix_4gates_mg,
+				label_matrix, stateful = False,sampling_time=0.2):
 
 	#Se cargan los datos de entrenamiento y test
-	trainX, testX, trainY, testY, scaler_cbfv, scaler_abp = dt.train_test_data(case,order,reshape_option = 1)
+	trainX, testX, trainY, testY, sampling_time,scaler_cbfv, scaler_abp = dt.train_test_data(subject,case,order)
 	print(trainX.shape)
+
 	#Se compila el modelo
 	model = m_lstm.init_model_lstm(units,layers) 
 	#Se entrena el modelo
-	model_fit.model_fit(model,trainX, trainY, testX, testY,units,layers,case,order,stateful = stateful)
+	model_fit.model_fit(model,trainX, trainY, testX, testY,subject,units,layers,case,order,stateful = stateful)
 
-	#layer_number = 0
-	#for layer in model.layers:
-	#	if layer_number < layers:
-	#		collapse_layer(collapse_matrix,layer.get_weights()[0],layer_number,units)
-
-	#		label_kernel = case + "_kernel"
-	#		label_matrix.append(label_kernel)
-			
-	#		collapse_layer(collapse_matrix,layer.get_weights()[1],layer_number,units)
-			
-	#		label_recurrent_kernel = case + "_recurrent_kernel"
-	#		label_matrix.append(label_recurrent_kernel)
-			
-	#		layer_number+=1
-
-	
 	if stateful == False:
 		#Se predice como se ajustan los conjuntos de entrenamiento y test al modelo
 		trainPredict = model.predict(trainX)
@@ -60,23 +49,9 @@ def run_network(units,
    		trainPredict = model.predict(trainX,batch_size=fit_config['batch_size'])
    		testPredict = model.predict(testX,batch_size=fit_config['batch_size'])
 
-
-   	#Values for step test
-   	sampling_time = 0.4
-   	time = trainX.shape[0]*0.4
-   	time_after = time*0.7
-   	time_until = time - time_after
-
-   	step = step_test.generate_step(sampling_time = sampling_time, 
-   							time_until_release=time_until ,
-   							time_after_release = time_after, 
-   							smoth_step_stimulus = True)
-   	step_prediction = step_test.step_test(model,step)
-   	step_test.plot_step_test(step_prediction,units,layers,case,order,'step_test_normalize.png')
-   	step_prediction = scaler_cbfv.inverse_transform(step_prediction)
-   	step_test.plot_step_test(step_prediction,units,layers,case,order,'step_test.png')
-
-
+   	#se predice la respuesta al escalon
+   	step_test.step_prediction(trainX[:,0,0],sampling_time,model,subject,units,layers,case,order,'step_test_normalize.png')
+ 
 	#Se obtiene el valor no normalizado de las predicciones. Ivert predictions
    	trainPredict = scaler_cbfv.inverse_transform(trainPredict)
    	trainY = scaler_cbfv.inverse_transform([trainY])
@@ -88,27 +63,30 @@ def run_network(units,
 
    	print "Corr_train: " + str(corr_train[0,1]) + " " + "Corr_test: " + str(corr_test[0,1])
 
-
-   	if corr_train[0,1] >= 0.8 and corr_test[0,1] >= 0.8:
+   	#se acepta solamente los modelos que tengan al menos 70% de correlacion en train y test
+   	if corr_train[0,1] >= 0.7 and corr_test[0,1] >= 0.7:
 	   	
-	  	collapse_layer_2gates(collapse_matrix_2gates,model.layers[1].get_weights()[1],units)
-	  	collapse_layer_2gates(collapse_matrix_2gates_mh,model.layers[1].get_weights()[1],units,mean_method='armonic')
-	  	collapse_layer_2gates(collapse_matrix_2gates_mg,model.layers[1].get_weights()[1],units,mean_method='geometric')
+	  	collapse_layer(collapse_matrix_2gates,model.layers[1].get_weights()[1],units,mean_method='aritmetic',gates_number = 2)
+	  	collapse_layer(collapse_matrix_2gates_flat,model.layers[1].get_weights()[1],units,mean_method='flatten',gates_number = 2)
+	  	collapse_layer(collapse_matrix_2gates_mg,model.layers[1].get_weights()[1],units,mean_method='geometric',gates_number = 2)
 
-	  	collapse_layer_3gates(collapse_matrix_3gates,model.layers[1].get_weights()[1],units)
-	  	collapse_layer_3gates(collapse_matrix_3gates_mh,model.layers[1].get_weights()[1],units,mean_method='armonic')
-	  	collapse_layer_3gates(collapse_matrix_3gates_mg,model.layers[1].get_weights()[1],units,mean_method='geometric')
+	  	collapse_layer(collapse_matrix_3gates,model.layers[1].get_weights()[1],units,mean_method='aritmetic',gates_number = 3)
+	  	collapse_layer(collapse_matrix_3gates_flat,model.layers[1].get_weights()[1],units,mean_method='flatten',gates_number = 3)
+	  	collapse_layer(collapse_matrix_3gates_mg,model.layers[1].get_weights()[1],units,mean_method='geometric',gates_number = 3)
 
+	  	collapse_layer(collapse_matrix_4gates,model.layers[1].get_weights()[1],units,mean_method='aritmetic',gates_number = 4)
+	  	collapse_layer(collapse_matrix_4gates_flat,model.layers[1].get_weights()[1],units,mean_method='flatten',gates_number = 4)
+	  	collapse_layer(collapse_matrix_4gates_mg,model.layers[1].get_weights()[1],units,mean_method='geometric',gates_number = 4)
 			
 		label_recurrent_kernel = case + "_recurrent_kernel"
 		label_matrix.append(label_recurrent_kernel)
-			
-	label_recurrent_kernel = case + "_recurrent_kernel"
-	label_matrix.append(label_recurrent_kernel)
 
-   	save.save_model(model,units,layers,case,order)
-   	save.save_txt(corr_train,corr_test,units,layers,case,order)
-   	save.plot_model_predictions(trainPredict,trainY,testPredict,testY,corr_train,corr_test,units,layers,case,order)
+   	save.save_model(model,subject,units,layers,case,order)
+   	save.save_txt(corr_train,corr_test,subject,units,layers,case,order)
+   	save.plot_model_predictions(trainPredict,trainY,testPredict,testY,corr_train,corr_test,subject,units,layers,case,order)
+
+   	del model
+
 
 
 

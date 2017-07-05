@@ -3,7 +3,8 @@ np.random.seed(997)
 from keras import initializers
 seed_value = 997
 
-
+#Activation functions: 'sigmoid', 'linear', 'tanh', 'hard_sigmoid'
+#Kernel_initializer: uniform, VarianceScaling, TruncatedNormal, Orthogonal, lecun_uniform, glorot_normal, glorot_uniform
 def get_nn_config():
 	kernel_initializer = initializers.glorot_uniform(seed=seed_value)
 	recurrent_initializer = initializers.orthogonal(seed=seed_value)
@@ -19,8 +20,8 @@ def get_nn_config():
 				'use_bias' : True,
 				'unit_forget' : True,
 				'go_backwards' : False,
-				'units' : 48,
+				'units' : 8,
 				'output' : 1,
-				'layers' : 1
+				'layers' : 2
 				}
 	return nn_config

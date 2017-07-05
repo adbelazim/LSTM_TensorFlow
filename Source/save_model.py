@@ -3,9 +3,9 @@ import config as cfg
 import matplotlib.pyplot as plt
 import config_keras as cfg_keras
 
-def save_model(model,units,layers,case,order):
+def save_model(model,subject,units,layers,case,order):
    nn_config = cfg_keras.get_nn_config()
-   files_save = cfg.get_files_save(units,layers,case,order,nn_config)
+   files_save = cfg.get_files_save(subject,units,layers,case,order,nn_config)
    path_model = files_save['file_save'] + "/"
    path_model = path_model + "model.png"
 
@@ -25,12 +25,12 @@ def save_model(model,units,layers,case,order):
    model_json.write(str(json_string))
    model_json.close()
 
-def save_txt(corr_train,corr_test,units,layers,case,order):
+def save_txt(corr_train,corr_test,subject,units,layers,case,order):
    model_correlation = str(corr_train[0,1]) + " " + str(corr_test[0,1])
    model_units_layers = "Layers: " + str(layers) + " "+ "Units: " + str(units)
 
    nn_config = cfg_keras.get_nn_config()
-   files_save = cfg.get_files_save(units,layers,case,order,nn_config)
+   files_save = cfg.get_files_save(subject,units,layers,case,order,nn_config)
    path_txt = files_save['file_txt']
 
    model_txt = open(path_txt,'w')
@@ -40,10 +40,10 @@ def save_txt(corr_train,corr_test,units,layers,case,order):
    model_txt.close()
 
 
-def plot_model_predictions(trainPredict,trainY,testPredict,testY,corr_train,corr_test,units,layers,case,order):
+def plot_model_predictions(trainPredict,trainY,testPredict,testY,corr_train,corr_test,subject,units,layers,case,order):
    ##PLOTS del modelo
    nn_config = cfg_keras.get_nn_config()
-   files_save = cfg.get_files_save(units,layers,case,order,nn_config)
+   files_save = cfg.get_files_save(subject,units,layers,case,order,nn_config)
 
    title1 = repr(corr_train[0,1]) 
    title1 = 'train ' + title1  

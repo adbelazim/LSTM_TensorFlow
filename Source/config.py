@@ -26,50 +26,45 @@ def get_compiler_config():
    return compiler_config
 
 def get_fit_config():
-   fit_config = {'epochs' : 1,
+   fit_config = {'epochs' : 200,
    				'batch_size' : 3}
    return fit_config
 
-#Activation functions: 'sigmoid', 'linear', 'tanh', 'hard_sigmoid'
-#Kernel_initializer: uniform, VarianceScaling, TruncatedNormal, Orthogonal, lecun_uniform, glorot_normal, glorot_uniform
+def get_files_config(subject,case):
+	file_data = "../Subjects_simulated/"+subject+"/"
+	
+	filename_train = file_data + "1" + case + ".txt"
+	filename_test = file_data + "2" + case + ".txt"
 
-
-
-def get_files_config(case,order):
-	file_data = "../Data/"
-	filename_train = ""
-	if order == "1":
-		filename_train = file_data + "1" + case + ".txt"
-		filename_test = file_data + "2" + case + ".txt"
-	else:
-		filename_train = file_data + "2" + case + ".txt"
-		filename_test = file_data + "1" + case + ".txt"
+	print(subject)
+	print(filename_train)
+	print(filename_test)
 
 	files_config = {'filename_train' : filename_train,
 					'filename_test' : filename_test
 					}
 	return files_config
 
-
-def get_files_save(units,layers,case,order,nn_config):
+def get_files_save(subject,units,layers,case,order,nn_config):
 	#nn_config = get_nn_config()
 	path = os.getcwd()
 	path, last_dir  = os.path.split(path)
 	path = path + "/Checkpoint"
 
-	path_dir = path + "/Test/"
+	path_dir = path + "/Process_Subjects/" + subject
 	improvements = "weights-improvement-{epoch:02d}-{val_loss:.2f}.hdf5"
 
 	layer = str(layers)
 	units = str(units)
 	#dir_save se utiliza para crear el directorio a guardar los pesos
-	path_dir = path_dir +str(nn_config['time_steps']) + "_time_steps" + "/"
+	path_dir = path_dir + "/" +str(nn_config['time_steps']) + "_time_steps" + "/"
 	dir_save = path_dir + case + "/" + layer +"_layer"+ "/" + units + "_units"  + "/" + order + "_fold"
 	weights_dir = dir_save + "/" + "weights"
 	dir_tensor_board =  dir_save + "/" + "tensor_log"
 	dir_weights_image = dir_save + "/" + "heat_images"
 	dir_dimensionality_reduction = dir_save + "/" + "dimensionality_reduction"
 
+	
 	if not os.path.exists(dir_save):
 		os.makedirs(dir_save)
 	if not os.path.exists(weights_dir):
@@ -86,11 +81,13 @@ def get_files_save(units,layers,case,order,nn_config):
 	file_tensor_board = dir_save + "/" + "tensor_log"
 	file_weights = dir_save + "/" + "weights/" + "final_weights.hdf5"
 	file_txt = dir_save + "/" + "model.txt"
+	file_step_txt = dir_save + "/" + "step.txt"
 
 	files_save = { 'file_save' : dir_save,
 					'file_txt' : file_txt,
 					'filepath' : filepath,
 					'file_csv' : file_csv,
+					'file_step_txt' : file_step_txt,
 					'file_weights' : file_weights,
 					'file_tensor_board' : file_tensor_board,
 					'dir_weights_image' : dir_weights_image,

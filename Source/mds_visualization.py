@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 
 import scipy.stats
 
+import os
+import config_keras as cfg_keras
 
 def visualization(df,name_image):
 	groups = df.groupby('label')
@@ -55,10 +57,24 @@ def visualization(df,name_image):
 	for i in range(len(df)):
 		ax.text(df.ix[i]['x'], df.ix[i]['y'], df.ix[i]['label'], size=8)  
 	fig_name = name_image + ".png"
-	ax.set_xticks(np.arange(-1, 1, 0.1))
-	ax.set_yticks(np.arange(-1, 1, 0.1))
+	ax.set_xticks(np.arange(-3, 3, 0.1))
+	ax.set_yticks(np.arange(-3, 3, 0.1))
 	plt.grid(True)
-	plt.savefig(fig_name)#show the plot
+
+	#Get path to save MDS plot
+	path = os.getcwd()
+	path, last_dir  = os.path.split(path)
+	path = path + "/MDS/" 
+	
+	nn_config = cfg_keras.get_nn_config()
+	dir_save = path + "/" +"layers_"+str(nn_config['layers']) +"_units_"+ str(nn_config['units'])
+
+	if not os.path.exists(dir_save):
+		os.makedirs(dir_save)
+
+	path_mds_plot =  dir_save +"/"+ "mds"+"_"+str(nn_config['layers']) +"_"+ str(nn_config['units'])+ "_" + fig_name
+
+	plt.savefig(path_mds_plot)#show the plot
 
 def reduction_dimensionality(collapse_matrix,label_matrix):
 	dist = 1 - cosine_similarity(collapse_matrix)
@@ -89,9 +105,57 @@ def mean_geometric_list(list_gates):
 	mean = scipy.stats.mstats.gmean(normalized)
 	return mean
 
+def collapse_layer(collapse_matrix,weight_matrix,units,mean_method='aritmetic',gates_number = 4):
+	i_gates = []
+	f_gates = []
+	c_gates = []
+	o_gates = []
+	for vector in weight_matrix:
+		i = 0
+		for element in vector:
+			if i < units:
+				i_gates.append(element)
+			elif i < units*2:
+				f_gates.append(element)
+			elif i < units*3:
+				c_gates.append(element)
+			else:
+				o_gates.append(element)
+			i+=1
+
+
+	if gates_number == 2:
+		if mean_method == 'flatten':
+			collapse_matrix.append(flatten_list([f_gates,c_gates]))
+		elif mean_method == 'geometric':
+			collapse_matrix.append([mean_geometric_list(f_gates),mean_geometric_list(c_gates)])
+		else:
+			collapse_matrix.append([mean_list(f_gates),mean_list(c_gates)])
+	elif gates_number == 3:
+		if mean_method == 'flatten':
+			collapse_matrix.append(flatten_list([f_gates,c_gates,o_gates]))
+		elif mean_method == 'geometric':
+			collapse_matrix.append([mean_geometric_list(f_gates),mean_geometric_list(c_gates),mean_geometric_list(o_gates)])
+		else:
+			collapse_matrix.append([mean_list(f_gates),mean_list(c_gates),mean_list(o_gates)])
+	elif gates_number == 4:
+		if mean_method == 'flatten':
+			collapse_matrix.append(flatten_list([i_gates,f_gates,c_gates,o_gates]))
+		elif mean_method == 'geometric':
+			collapse_matrix.append([mean_geometric_list(i_gates),mean_geometric_list(f_gates),mean_geometric_list(c_gates),mean_geometric_list(o_gates)])
+		else:
+			collapse_matrix.append([mean_list(i_gates),mean_list(f_gates),mean_list(c_gates),mean_list(o_gates)])
+	else:
+		print("No se puede colapsar la matriz numero de gates incorrecto")
+
+
+	#collapse_matrix.append([mean_list(i_gates),mean_list(f_gates),mean_list(c_gates),mean_list(o_gates)])
+	#collapse_matrix.append([mean_list(f_gates),mean_list(c_gates)])
+
+	return collapse_matrix
+
 
 def collapse_layer_2gates(collapse_matrix,weight_matrix,units,mean_method='aritmetic'):
-	print("iniciando colapse")
 	i_gates = []
 	f_gates = []
 	c_gates = []
@@ -123,7 +187,6 @@ def collapse_layer_2gates(collapse_matrix,weight_matrix,units,mean_method='aritm
 	return collapse_matrix
 
 def collapse_layer_3gates(collapse_matrix,weight_matrix,units,mean_method='aritmetic'):
-	print("iniciando colapse")
 	i_gates = []
 	f_gates = []
 	c_gates = []
