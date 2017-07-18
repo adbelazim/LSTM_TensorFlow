@@ -49,7 +49,8 @@ def plot_model_predictions(trainPredict,trainY,testPredict,testY,corr_train,corr
    title1 = 'train ' + title1  
    title2 = repr(corr_test[0,1])
    title2 = 'test ' + title2  
-
+   print("ploteando train predict en", (files_save['file_save'] + "/" +'trainPredict.png'))
+   print("ploteando test predict en", (files_save['file_save'] + "/" +'testPredict.png'))
    plt.figure(2)
    plt.subplot(111)
    plt.title(title1)
@@ -57,6 +58,7 @@ def plot_model_predictions(trainPredict,trainY,testPredict,testY,corr_train,corr
    plt.ylabel("CBFV")
    plt.xlabel("Time")
    plt.savefig(files_save['file_save'] + "/" +'trainPredict.png')
+   plt.clf()
 
    plt.figure(3)
    plt.subplot(111)
@@ -65,7 +67,7 @@ def plot_model_predictions(trainPredict,trainY,testPredict,testY,corr_train,corr
    plt.ylabel("CBFV")
    plt.xlabel("Time")
    plt.savefig(files_save['file_save'] + "/" +'testPredict.png')  
-
+   plt.clf()
 
 
 

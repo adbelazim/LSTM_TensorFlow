@@ -9,8 +9,6 @@ import matplotlib.pyplot as plt
 
 
 
-
-
 ##TO DO, Pruebas
 #def pearson_corr(y_true,y_pred):
 #	return pearson(y_true,y_pred)

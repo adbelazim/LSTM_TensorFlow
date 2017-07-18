@@ -16,8 +16,10 @@ import time
 from tensorflow import losses
 from tensorflow.contrib.metrics.python.ops.metric_ops import streaming_pearson_correlation as pearson
 
+from hyperas.distributions import choice, uniform
 
 def init_model_lstm_stateful(units,layers):
+   
 
    nn_config = cfg_keras.get_nn_config()
    regularizer_config = cfg.get_regularizer_config()
@@ -70,7 +72,7 @@ def init_model_lstm_stateful(units,layers):
    print "Compilation Time : ", time.time() - start
    return model
 
-def init_model_lstm(units,layers):
+def init_model_lstm(units=8,layers=2):
 
    nn_config = cfg_keras.get_nn_config()
    regularizer_config = cfg.get_regularizer_config()
@@ -111,8 +113,6 @@ def init_model_lstm(units,layers):
    print "Compilation Time : ", time.time() - start
 
    return model
-
-
 
 
 

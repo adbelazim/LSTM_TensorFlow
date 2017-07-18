@@ -1,12 +1,11 @@
 import numpy as np
 import sys
 
-#import mds_visualization
 import run_network
 import config_keras as cfg_keras
-#from sklearn.preprocessing import MinMaxScaler
 
-#if __name__ == "__main__":
+import global_queue
+
 def two_recurrent_layers(subject,cases,orders):
    #cases = ["11","19","55","91","99"]
    #orders = ["1","2"]
@@ -33,7 +32,12 @@ def two_recurrent_layers(subject,cases,orders):
    np.random.seed(997)
 
    for case in cases:
+      global_queue.push_actual_case(case,global_queue.cases_list)
+      #push case to queu
       for order in orders:
+         print("order two recurrent", order)
+         global_queue.push_actual_order(order,global_queue.orders_list)
+         #push order to queue
          for layer in layers:
             for unit in units:
                print
@@ -53,26 +57,13 @@ def two_recurrent_layers(subject,cases,orders):
                #for i in range(1,repeat_experiment):
                #   print("experiment: ",i)
                #   run_network.run_network(unit,layer,case,order,stateful = False)
-
+         #pop order from queue
+         global_queue.pop_actual_order(global_queue.orders_list)
+      global_queue.pop_actual_case(global_queue.cases_list)
+      #pop case from queue
    return collapse_matrix_2gates, collapse_matrix_2gates_flat, collapse_matrix_2gates_mg, collapse_matrix_3gates, collapse_matrix_3gates_flat, collapse_matrix_3gates_mg,collapse_matrix_4gates, collapse_matrix_4gates_flat, collapse_matrix_4gates_mg, label_matrix
 
-   #df_1 = mds_visualization.reduction_dimensionality_2(collapse_matrix_2gates,label_matrix)
-   #df_2 = mds_visualization.reduction_dimensionality_2(collapse_matrix_2gates_flat,label_matrix)
-   #df_3 = mds_visualization.reduction_dimensionality_2(collapse_matrix_2gates_mg,label_matrix)
 
-   #df_4 = mds_visualization.reduction_dimensionality_2(collapse_matrix_3gates,label_matrix)
-   #df_5 = mds_visualization.reduction_dimensionality_2(collapse_matrix_3gates_flat,label_matrix)
-   #df_6 = mds_visualization.reduction_dimensionality_2(collapse_matrix_2gates_mg,label_matrix)
-
-
-   #mds_visualization.visualization(df_1,"distancia_euclidean_2gates")
-   #mds_visualization.visualization(df_2,"distancia_euclidean_2gates_flat")
-   #mds_visualization.visualization(df_3,"distancia_euclidean_2gates_mg")
-
-   #mds_visualization.visualization(df_4,"distancia_euclidean_3gates")
-   #mds_visualization.visualization(df_5,"distancia_euclidean_3gates_flat")
-   #mds_visualization.visualization(df_6,"distancia_euclidean_3gates_mg")
-               
 
 
 

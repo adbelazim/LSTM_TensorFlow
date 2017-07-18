@@ -2,11 +2,27 @@ import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 import config as cfg
 import config_keras as cfg_keras
-from data_utils import lectura, lineal_interpolation, create_timesteps
+#from data_utils import lectura, lineal_interpolation, create_timesteps
+import global_queue
 
-def train_test_data(subject,case,order):
 
-   files_config = cfg.get_files_config(subject,case)
+
+def train_test_data():
+   from sklearn.preprocessing import MinMaxScaler
+   import config as cfg
+   import config_keras as cfg_keras
+   from data_utils import lectura, lineal_interpolation, create_timesteps, fold_order
+   import numpy as np
+
+   subject = global_queue.get_actual_subject(global_queue.subjects_list)
+   case = global_queue.get_actual_case(global_queue.cases_list)
+   order = global_queue.get_actual_order(global_queue.orders_list)
+
+   print("in train test data case", case)
+   print("in train test data subject", subject)
+
+   grid_config = cfg.get_grid_config()
+   files_config = cfg.get_files_config(grid_config['path_subjects'],subject,case)
    nn_config = cfg_keras.get_nn_config()
    
    # Lectura de datos de entrenamiento
@@ -54,16 +70,14 @@ def train_test_data(subject,case,order):
 
    #reshape_option = 1 significa que se utilizaran los retardos como time_steps, de lo contrario los retardos equivalen a la dimension de los datos
 
-   if order == "1":
-      trainX = np.reshape(trainX, (trainX.shape[0], nn_config['time_steps'], nn_config['input_dim']))
-      testX = np.reshape(testX, (testX.shape[0], nn_config['time_steps'], nn_config['input_dim']))
-      return trainX, testX, trainY, testY, sampling_time, scaler_cbfv, scaler_abp
-   else:
-      trainX = np.reshape(trainX, (trainX.shape[0], nn_config['time_steps'], nn_config['input_dim']))
-      testX = np.reshape(testX, (testX.shape[0], nn_config['time_steps'], nn_config['input_dim']))
-      return testX, trainX, testY, trainY, sampling_time, scaler_cbfv, scaler_abp
+   #segun sea el orden se cambia los conjuntos de train y test
+   trainX, testX, trainY, testY = fold_order(trainX, testX, trainY, testY,order,nn_config)
+
+   print("finaliza data processing")
+   return trainX, testX, trainY, testY, sampling_time, scaler_cbfv, scaler_abp 
 
    
+
 
    
    

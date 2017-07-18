@@ -46,6 +46,7 @@ def model_fit_callbacks(subject,units,layers,case,order):
 	fit_history = History()
 	tensor_board = TensorBoard(log_dir=files_save['file_tensor_board'], histogram_freq=0, write_graph=True, write_images=True)
 	return [checkpointer,reduce_lr,early_stoping,loss_history,fit_history,csv_logger,tensor_board]
+	#return [checkpointer,loss_history,fit_history,csv_logger,tensor_board]
 
 
 def model_fit(model,trainX, trainY, testX, testY,subject,units,layers,case,order,stateful = False):
@@ -69,8 +70,36 @@ def model_fit(model,trainX, trainY, testX, testY,subject,units,layers,case,order
 			callbacks=callbacks)
 		#print(callbacks[3].losses)
 
+	return model
 
+def model_fit_for_search(model,trainX, trainY, testX, testY,units,layers,stateful = False):
+	import global_queue
+	import config as cfg
 
+	subject = global_queue.get_actual_subject(global_queue.subjects_list)
+	case = global_queue.get_actual_case(global_queue.cases_list)
+	order = global_queue.get_actual_order(global_queue.orders_list)
+
+	fit_config = cfg.get_fit_config()
+	callbacks = model_fit_callbacks(subject,units,layers,case,order)
+
+	if stateful:
+		model.fit(trainX, trainY, 
+			epochs=fit_config['epochs'], 
+			batch_size=fit_config['batch_size'], 
+			verbose=2,
+			validation_data=(testX,testY), 
+			callbacks=callbacks,
+			shuffle=False)
+	else:
+		model.fit(trainX, trainY, 
+			epochs=fit_config['epochs'], 
+			verbose=2,
+			validation_data=(testX,testY), 
+			callbacks=callbacks)
+		#print(callbacks[3].losses)
+
+	return model
 
 
 

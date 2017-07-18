@@ -19,6 +19,9 @@ def get_regularizer_config():
    				}
    return regularizer_config
 
+def get_grid_config():
+	grid_config = {'path_subjects' : "../Subjects_test/"}
+	return grid_config
 
 #Loss: 'mean_squared_logarithmic_error', 'mean_squared_error'
 def get_compiler_config():
@@ -30,11 +33,11 @@ def get_fit_config():
    				'batch_size' : 3}
    return fit_config
 
-def get_files_config(subject,case):
-	file_data = "../Subjects_simulated/"+subject+"/"
+def get_files_config(path_subjects,subject,case):
+	file_data = str(path_subjects) + str(subject) + "/"
 	
-	filename_train = file_data + "1" + case + ".txt"
-	filename_test = file_data + "2" + case + ".txt"
+	filename_train = file_data + "1" + str(case) + ".txt"
+	filename_test = file_data + "2" + str(case) + ".txt"
 
 	print(subject)
 	print(filename_train)
@@ -51,7 +54,7 @@ def get_files_save(subject,units,layers,case,order,nn_config):
 	path, last_dir  = os.path.split(path)
 	path = path + "/Checkpoint"
 
-	path_dir = path + "/Process_Subjects/" + subject
+	path_dir = path + "/Base_Model/" + subject
 	improvements = "weights-improvement-{epoch:02d}-{val_loss:.2f}.hdf5"
 
 	layer = str(layers)

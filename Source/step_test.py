@@ -50,7 +50,7 @@ def plot_step_test(prediction,abp,subject,units,layers,case,order,name):
     nn_config = cfg_keras.get_nn_config()
     files_save = cfg.get_files_save(subject,units,layers,case,order,nn_config)
     #se guarda Abp con retardos y prediction en un archivo
-    files_save['file_step_txt']
+    #files_save['file_step_txt']
 
     print(len(abp))
     print(len(prediction))
@@ -63,12 +63,16 @@ def plot_step_test(prediction,abp,subject,units,layers,case,order,name):
             f.write("\n")
 
     #se crea ploteo
-    plt.figure(1)
+    #plt.figure(1)
     plt.title("Step test")
     plt.plot(prediction, 'b')
     plt.ylabel("CBFV")
     plt.xlabel("Time")
-    plt.savefig(files_save['file_save'] + "/" + name)  
+
+    print("file_save in plot", files_save['file_save'])
+    print("estoy ploteando en ", (files_save['file_save'] + "/" + name))
+    plt.savefig(files_save['file_save'] + "/" + name) 
+    plt.clf() 
 
 def step_test(model,step):
     nn_config = cfg_keras.get_nn_config()
@@ -78,10 +82,12 @@ def step_test(model,step):
     prediction = model.predict(step)
     return prediction
 
-def step_prediction(abp_first_lag,sampling_time,model,subject,units,layers,case,order,name_plot):
-
+def step_prediction(abp_first_lag,sampling_time,model,path_subjects,subject,units,layers,case,order,name_plot):
+    print("#########################")
+    print("entre a step_prediction")
+    print("#########################")
     #get len of abp signal
-    files_config = cfg.get_files_config(subject,case)
+    files_config = cfg.get_files_config(path_subjects,subject,case)
     data_train = lectura(files_config['filename_train'])
 
     time_train,cbfv_train,abp_train = np.split(data_train,3,axis = 1)
