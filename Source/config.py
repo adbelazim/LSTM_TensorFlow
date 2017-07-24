@@ -29,7 +29,7 @@ def get_compiler_config():
    return compiler_config
 
 def get_fit_config():
-   fit_config = {'epochs' : 200,
+   fit_config = {'epochs' : 100,
    				'batch_size' : 3}
    return fit_config
 

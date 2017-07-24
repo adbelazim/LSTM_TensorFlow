@@ -75,6 +75,7 @@ def model_fit(model,trainX, trainY, testX, testY,subject,units,layers,case,order
 def model_fit_for_search(model,trainX, trainY, testX, testY,units,layers,stateful = False):
 	import global_queue
 	import config as cfg
+	from hyperas.distributions import choice
 
 	subject = global_queue.get_actual_subject(global_queue.subjects_list)
 	case = global_queue.get_actual_case(global_queue.cases_list)
@@ -93,11 +94,10 @@ def model_fit_for_search(model,trainX, trainY, testX, testY,units,layers,statefu
 			shuffle=False)
 	else:
 		model.fit(trainX, trainY, 
-			epochs=fit_config['epochs'], 
+			epochs=100, 
 			verbose=2,
 			validation_data=(testX,testY), 
 			callbacks=callbacks)
-		#print(callbacks[3].losses)
 
 	return model
 
